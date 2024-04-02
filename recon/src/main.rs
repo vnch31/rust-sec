@@ -1,51 +1,53 @@
-use futures::{stream, StreamExt};
-use reqwest::Client;
-use std::{
-    env,
-    time::{Duration, Instant},
-};
+use std::{env, path::PathBuf};
 
-mod error;
-pub use error::Error;
-mod model;
-mod ports;
-mod subdomains;
-use model::Subdomain;
+use anyhow::Result;
+use clap::{command, Parser, Subcommand};
+
+mod cli;
 mod common_ports;
+mod dns;
+mod error;
+mod modules;
+mod ports;
+pub use error::Error;
 
-#[tokio::main]
-async fn main() -> Result<(), anyhow::Error> {
-    let args: Vec<String> = env::args().collect();
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Cli {
+    /// Sets a custom config file
+    #[arg(short, long, value_name = "FILE")]
+    config: Option<PathBuf>,
 
-    if args.len() != 2 {
-        return Err(Error::CliUsage.into());
-    }
+    /// Turn debugging information on
+    #[arg(short, long, action = clap::ArgAction::Count)]
+    debug: u8,
 
-    let target = args[1].as_str();
+    #[command(subcommand)]
+    command: Commands,
+}
 
-    let http_timeout = Duration::from_secs(30);
-    let http_client = Client::builder().timeout(http_timeout).build()?;
+#[derive(Subcommand)]
+enum Commands {
+    #[command(about = "Scan a target")]
+    Scan {
+        #[arg(short, long)]
+        target: String,
+    },
+    Modules,
+}
 
-    let ports_concurrency = 200;
-    let subdomains_concurrency = 100;
-    let scan_start = Instant::now();
+fn main() -> Result<(), anyhow::Error> {
+    env::set_var("RUST_LOG", "info,trust_dns_proto=error");
+    env_logger::init();
 
-    let subdomains = subdomains::enumerate(&http_client, target).await?;
+    let cli = Cli::parse();
 
-    let scan_result: Vec<Subdomain> = stream::iter(subdomains.into_iter())
-        .map(|subdomain| ports::scan_ports(ports_concurrency, subdomain))
-        .buffer_unordered(subdomains_concurrency)
-        .collect()
-        .await;
-
-    let scan_duration = scan_start.elapsed();
-    println!("Scan duration: {:?}", scan_duration);
-
-    for subdomain in scan_result {
-        println!("{:?}", subdomain.domain);
-        for port in &subdomain.open_ports {
-            println!("\t {} is open", port.port);
+    match cli.command {
+        Commands::Scan { target } => cli::scan(&target)?,
+        Commands::Modules => {
+            cli::modules();
         }
     }
+
     Ok(())
 }

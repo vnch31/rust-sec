@@ -20,6 +20,7 @@ pub fn http_modules() -> Vec<Box<dyn HttpModule>> {
         Box::new(http::GitHeadDisclosure::new()),
         Box::new(http::EnvFileDisclosure::new()),
         Box::new(http::DsStoreFileDisclosure::new()),
+        Box::new(http::DirectoryListingDisclosure::new()),
     ]
 }
 
@@ -40,6 +41,7 @@ pub enum HttpFinding {
     GitHeadDisclosure(String),
     EnvFileDisclosure(String),
     DsStoreFileDisclosure(String),
+    DirectoryListingDisclosure(String),
 }
 
 /// Subdomain

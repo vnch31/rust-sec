@@ -52,3 +52,18 @@ impl HttpModule for DsStoreFileDisclosure {
         Ok(None)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn is_ds_store() {
+        let module = super::DsStoreFileDisclosure::new();
+        let body = "testetstes";
+        let body1 = [
+            0x00, 0x00, 0x00, 0x01, 0x42, 0x75, 0x64, 0x31, 0x00, 0x00, 0x30, 0x00, 0x00, 0x00,
+            0x08, 0x0,
+        ];
+        assert_eq!(false, module.is_ds_store_file(body.as_bytes()));
+        assert_eq!(true, module.is_ds_store_file(&body1));
+    }
+}

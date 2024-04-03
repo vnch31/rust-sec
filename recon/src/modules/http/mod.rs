@@ -6,3 +6,5 @@ mod env_file_disclosure;
 pub use env_file_disclosure::EnvFileDisclosure;
 mod ds_store_file_disclosure;
 pub use ds_store_file_disclosure::DsStoreFileDisclosure;
+mod directory_listing_disclosure;
+pub use directory_listing_disclosure::DirectoryListingDisclosure;

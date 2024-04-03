@@ -36,6 +36,6 @@ impl HttpModule for EnvFileDisclosure {
             return Ok(None);
         }
 
-        Ok(Some(HttpFinding::EnvFileDisclosure(url)))
+        Ok(Some(HttpFinding::EnvFileDisclosure()))
     }
 }

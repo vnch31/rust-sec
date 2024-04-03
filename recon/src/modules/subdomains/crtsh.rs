@@ -47,15 +47,14 @@ impl SubdomainModule for Crtsh {
         // clean and dedup
         let subdomains: HashSet<String> = crtsh_entries
             .into_iter()
-            .map(|entry| {
+            .flat_map(|entry| {
                 entry
                     .name_value
-                    .split("\n")
+                    .split('\n')
                     .map(|s| s.trim().to_string())
                     .collect::<Vec<String>>()
             })
-            .flatten()
-            .filter(|s: &String| !s.contains("*"))
+            .filter(|s: &String| !s.contains('*'))
             .collect();
 
         Ok(subdomains.into_iter().collect())

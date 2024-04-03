@@ -37,11 +37,11 @@ pub trait HttpModule: Module {
 
 #[derive(Debug, Clone)]
 pub enum HttpFinding {
-    GitlabOpenRegistration(String),
-    GitHeadDisclosure(String),
-    EnvFileDisclosure(String),
-    DsStoreFileDisclosure(String),
-    DirectoryListingDisclosure(String),
+    GitlabOpenRegistration(),
+    GitHeadDisclosure(),
+    EnvFileDisclosure(),
+    DsStoreFileDisclosure(),
+    DirectoryListingDisclosure(),
 }
 
 /// Subdomain
@@ -61,5 +61,5 @@ pub struct Subdomain {
 pub struct Port {
     pub port: u16,
     pub is_open: bool,
-    pub findings: Vec<HttpFinding>,
+    // pub findings: Vec<HttpFinding>,
 }

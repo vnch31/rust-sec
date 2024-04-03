@@ -15,7 +15,7 @@ pub async fn scan_ports(concurrency: usize, subdomain: Subdomain) -> Subdomain {
         .expect("port scanner: Creating socket addresses failed")
         .collect();
 
-    if socket_addresses.len() == 0 {
+    if socket_addresses.is_empty() {
         return subdomain;
     }
 
@@ -61,8 +61,8 @@ async fn scan_port(mut socket_addr: SocketAddr, port: u16) -> Port {
     );
 
     Port {
-        port: port,
+        port,
         is_open,
-        findings: vec![],
+        // findings: vec![],
     }
 }

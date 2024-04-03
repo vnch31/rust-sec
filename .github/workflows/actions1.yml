@@ -8,7 +8,7 @@ on:
       - "features-**"
 
 jobs:
-  test-phaser:
+  test-recon:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

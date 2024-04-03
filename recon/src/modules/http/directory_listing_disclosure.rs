@@ -50,7 +50,7 @@ impl HttpModule for DirectoryListingDisclosure {
 
         let body = res.text().await?;
         if self.is_directory_listing(body).await? {
-            return Ok(Some(HttpFinding::DirectoryListingDisclosure(url)));
+            return Ok(Some(HttpFinding::DirectoryListingDisclosure()));
         }
 
         Ok(None)

@@ -31,7 +31,7 @@ impl HttpModule for GitlabOpenRegistrations {
         http_client: &Client,
         endpoint: &str,
     ) -> Result<Option<HttpFinding>, Error> {
-        let url = format!("{}", &endpoint);
+        let url = (&endpoint).to_string();
         let res = http_client.get(&url).send().await?;
 
         if !res.status().is_success() {
@@ -40,7 +40,7 @@ impl HttpModule for GitlabOpenRegistrations {
 
         let body = res.text().await?;
         if body.contains("This is a self-managed instance of GitLab") {
-            return Ok(Some(HttpFinding::GitlabOpenRegistration(url)));
+            return Ok(Some(HttpFinding::GitlabOpenRegistration()));
         }
 
         Ok(None)

@@ -22,5 +22,5 @@ pub fn new_resolver() -> Resolver {
     let resolver = AsyncResolver::tokio(ResolverConfig::default(), opts)
         .expect("dns/new_resolver: building DNS client");
 
-    return Arc::new(resolver);
+    Arc::new(resolver)
 }

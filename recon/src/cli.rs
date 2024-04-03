@@ -70,7 +70,7 @@ pub fn scan(target: &str) -> Result<(), Error> {
         subdomains.push(target.to_string());
 
         // dedup, clean and convert results
-        let subdomains: Vec<Subdomain> = HashSet::<String>::from_iter(subdomains.into_iter())
+        let subdomains: Vec<Subdomain> = HashSet::<String>::from_iter(subdomains)
             .into_iter()
             .filter(|subdomain| subdomain.contains(target))
             .map(|domain| Subdomain {

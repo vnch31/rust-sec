@@ -42,7 +42,7 @@ impl HttpModule for GitHeadDisclosure {
 
         let body = res.text().await?;
         if self.is_head_file(&body) {
-            return Ok(Some(HttpFinding::GitHeadDisclosure(url)));
+            return Ok(Some(HttpFinding::GitHeadDisclosure()));
         }
 
         Ok(None)
